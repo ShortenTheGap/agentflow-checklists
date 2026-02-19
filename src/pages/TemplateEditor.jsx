@@ -329,6 +329,7 @@ export default function TemplateEditor() {
                       onAddTask={handleAddTask}
                       onEditTask={handleEditTask}
                       onDeleteTask={deleteTaskMutation.mutate}
+                      onUpdateTaskNotes={handleUpdateTaskNotes}
                     />
                   ))
                 )}
