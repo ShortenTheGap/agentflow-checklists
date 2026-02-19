@@ -145,11 +145,12 @@ export default function AdminUsers() {
           role: form.role,
           status: "pending_setup"
         });
-        
+
         if (response.data?.error) {
           throw new Error(response.data.error);
         }
-        
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
         queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
       }
