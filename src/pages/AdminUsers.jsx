@@ -136,22 +136,27 @@ export default function AdminUsers() {
         }
 
         await base44.entities.User.update(editing.id, updateData);
-        queryClient.invalidateQueries({ queryKey: ["users"] });
+        await queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
       } else {
-        await base44.functions.invoke('createUser', {
+        const response = await base44.functions.invoke('createUser', {
           full_name: form.full_name,
           email: form.email,
           role: form.role,
           status: "pending_setup"
         });
         
-        await queryClient.invalidateQueries({ queryKey: ["users"] });
+        if (response.data?.error) {
+          throw new Error(response.data.error);
+        }
+        
+        await queryClient.refetchQueries({ queryKey: ["users"] });
         closeDialog();
       }
     } catch (error) {
       console.error("Error saving user:", error);
       alert("Error: " + (error.message || "Failed to save user"));
+    } finally {
       setIsCreating(false);
     }
   };
