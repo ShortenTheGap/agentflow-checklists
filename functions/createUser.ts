@@ -11,14 +11,14 @@ Deno.serve(async (req) => {
 
     const { full_name, email, role, status } = await req.json();
 
-    const newUser = await base44.asServiceRole.entities.User.create({
-      full_name,
-      email,
-      role,
+    const invitedUser = await base44.users.inviteUser(email, role);
+
+    const updatedUser = await base44.asServiceRole.entities.User.update(invitedUser.id, {
+      full_name: full_name || invitedUser.full_name,
       status: status || 'pending_setup'
     });
 
-    return Response.json(newUser);
+    return Response.json(updatedUser);
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
