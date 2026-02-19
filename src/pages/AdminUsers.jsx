@@ -294,10 +294,10 @@ export default function AdminUsers() {
             <Button variant="outline" onClick={closeDialog} disabled={isCreating}>Cancel</Button>
             <Button 
               onClick={handleSave} 
-              disabled={!form.email || (form.role === "agent" && !form.user_type) || isCreating} 
+              disabled={!form.email || isCreating} 
               className="bg-slate-900 hover:bg-slate-800 text-white"
             >
-              {isCreating ? "Creating..." : editing ? "Save Changes" : "Create User"}
+              {isCreating ? (editing ? "Saving..." : "Inviting...") : editing ? "Save Changes" : "Send Invite"}
             </Button>
           </DialogFooter>
         </DialogContent>
