@@ -58,23 +58,14 @@ export default function TaskModal({ task, open, onOpenChange, onSave }) {
           </div>
 
           <div>
-            <button
-              onClick={() => setExpandedNotes(!expandedNotes)}
-              className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-2 hover:text-slate-900"
-            >
-              {expandedNotes ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              Task Details
-            </button>
-            
-            {expandedNotes && (
-              <Textarea
-                value={formData.notes}
-                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                placeholder="Add task description, instructions, or links..."
-                rows={6}
-                className="resize-none"
-              />
-            )}
+            <label className="text-sm font-medium text-slate-700 block mb-2">Task Details (optional)</label>
+            <Textarea
+              value={formData.notes}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              placeholder="Add task description, instructions, or links..."
+              rows={6}
+              className="resize-none"
+            />
           </div>
 
           <div className="flex justify-end gap-2 pt-4 border-t border-slate-200">
