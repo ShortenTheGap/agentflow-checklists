@@ -28,7 +28,6 @@ export default function TaskModal({ task, open, onOpenChange, onSave }) {
     if (!formData.name.trim()) return;
     onSave(formData);
     setFormData({ name: "", notes: "" });
-    setExpandedNotes(false);
     onOpenChange(false);
   };
 
