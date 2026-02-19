@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
-const adminPages = ["AdminDashboard", "AdminUsers", "AdminUserTypes", "AdminTemplates", "AdminSubmissions"];
+const adminPages = ["AdminDashboard", "AdminUsers", "AdminUserTypes", "AdminTemplates", "AdminSubmissions", "TemplateEditor", "SubmissionReview"];
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);

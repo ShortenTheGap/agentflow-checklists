@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { LogOut, Plus, Send, CheckCircle2 } from "lucide-react";
+import { LogOut, Plus, Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import AgentSectionCard from "@/components/agent/AgentSectionCard";
 import AgentTaskModal from "@/components/agent/AgentTaskModal";
@@ -251,6 +251,18 @@ export default function AgentChecklistEditor() {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
+      {checklist.status === "revision_requested" && checklist.revision_notes && (
+        <div className="bg-orange-50 border-b border-orange-200 sticky top-0 z-20">
+          <div className="max-w-6xl mx-auto px-6 py-3 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-semibold text-orange-900 text-sm">Revision Requested by Admin</p>
+              <p className="text-sm text-orange-700 mt-1">{checklist.revision_notes}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="bg-white border-b border-slate-200 sticky top-0 z-20">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex-1">

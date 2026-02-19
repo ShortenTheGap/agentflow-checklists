@@ -57,6 +57,7 @@ import AdminSubmissions from './pages/AdminSubmissions';
 import AdminUsers from './pages/AdminUsers';
 import TemplateEditor from './pages/TemplateEditor';
 import AgentChecklistEditor from './pages/AgentChecklistEditor';
+import SubmissionReview from './pages/SubmissionReview';
 import __Layout from './Layout.jsx';
 
 
@@ -71,6 +72,7 @@ export const PAGES = {
     "AdminUsers": AdminUsers,
     "TemplateEditor": TemplateEditor,
     "AgentChecklistEditor": AgentChecklistEditor,
+    "SubmissionReview": SubmissionReview,
 }
 
 export const pagesConfig = {
