@@ -38,10 +38,62 @@ export default function TaskRow({ task, index, onEdit, onDelete, onUpdateNotes }
           </div>
 
           <div className="flex-1 min-w-0">
-            <span className="font-medium text-slate-900">{task.name}</span>
-            {isExpanded && task.notes && (
-              <p className="text-xs text-slate-500 mt-2 whitespace-pre-wrap">{task.notes}</p>
-            )}
+           <span className="font-medium text-slate-900">{task.name}</span>
+           {isExpanded && task.notes && (
+             <div className="mt-2">
+               {isEditingNotes ? (
+                 <div className="space-y-2">
+                   <Textarea
+                     value={editedNotes}
+                     onChange={(e) => setEditedNotes(e.target.value)}
+                     className="text-xs resize-none"
+                     rows={4}
+                   />
+                   <div className="flex gap-2">
+                     <Button
+                       size="sm"
+                       variant="ghost"
+                       onClick={() => {
+                         if (editedNotes !== task.notes) {
+                           onUpdateNotes(task.id, editedNotes);
+                         }
+                         setIsEditingNotes(false);
+                       }}
+                       className="h-6 text-green-600 hover:text-green-700 gap-1 text-xs"
+                     >
+                       <Check className="w-3 h-3" />
+                       Save
+                     </Button>
+                     <Button
+                       size="sm"
+                       variant="ghost"
+                       onClick={() => {
+                         setEditedNotes(task.notes || "");
+                         setIsEditingNotes(false);
+                       }}
+                       className="h-6 text-slate-400 hover:text-slate-600 gap-1 text-xs"
+                     >
+                       <X className="w-3 h-3" />
+                       Cancel
+                     </Button>
+                   </div>
+                 </div>
+               ) : (
+                 <div className="group">
+                   <p className="text-xs text-slate-500 whitespace-pre-wrap">{task.notes}</p>
+                   <Button
+                     size="sm"
+                     variant="ghost"
+                     onClick={() => setIsEditingNotes(true)}
+                     className="h-6 mt-1 text-slate-400 hover:text-slate-600 gap-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                   >
+                     <Pencil className="w-3 h-3" />
+                     Edit
+                   </Button>
+                 </div>
+               )}
+             </div>
+           )}
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
