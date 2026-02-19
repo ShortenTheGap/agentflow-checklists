@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, Check, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 
 export default function TaskModal({ task, open, onOpenChange, onSave }) {
   const [formData, setFormData] = useState({
