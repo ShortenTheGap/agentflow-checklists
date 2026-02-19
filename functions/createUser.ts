@@ -11,10 +11,12 @@ Deno.serve(async (req) => {
 
     const { full_name, email, role, status } = await req.json();
 
-    const invitedUser = await base44.users.inviteUser(email, role || 'agent');
+    const baseRole = role === 'admin' ? 'admin' : 'user';
+    const invitedUser = await base44.users.inviteUser(email, baseRole);
 
     const updatedUser = await base44.asServiceRole.entities.User.update(invitedUser.id, {
       full_name: full_name || invitedUser.full_name,
+      role: role || 'agent',
       status: status || 'pending_setup'
     });
 
