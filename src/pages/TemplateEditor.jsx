@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Plus, Pencil, Check, X } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -23,6 +24,8 @@ export default function TemplateEditor() {
   const [showAddSection, setShowAddSection] = useState(false);
   const [editingTemplateName, setEditingTemplateName] = useState(false);
   const [newTemplateName, setNewTemplateName] = useState("");
+  const [editingDescription, setEditingDescription] = useState(false);
+  const [newDescription, setNewDescription] = useState("");
 
   const { data: template } = useQuery({
     queryKey: ["template", templateId],
@@ -164,6 +167,20 @@ export default function TemplateEditor() {
     setNewTemplateName("");
   };
 
+  const handleEditDescription = () => {
+    setNewDescription(template.description || "");
+    setEditingDescription(true);
+  };
+
+  const handleSaveDescription = () => {
+    updateTemplateMutation.mutate({ id: templateId, data: { description: newDescription.trim() } });
+  };
+
+  const handleCancelDescriptionEdit = () => {
+    setEditingDescription(false);
+    setNewDescription("");
+  };
+
   const onDragEnd = async (result) => {
     if (!result.destination) return;
 
@@ -245,9 +262,41 @@ export default function TemplateEditor() {
               {getUserTypeName(template.user_type)}
             </Badge>
           </div>
-          {template.description && (
-            <p className="text-sm text-slate-500 ml-14">{template.description}</p>
-          )}
+          <div className="ml-14">
+            {editingDescription ? (
+              <div className="flex items-start gap-2">
+                <Textarea
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && e.ctrlKey) handleSaveDescription();
+                    if (e.key === "Escape") handleCancelDescriptionEdit();
+                  }}
+                  placeholder="Template description (optional)"
+                  className="text-sm flex-1 max-w-2xl"
+                  rows={2}
+                  autoFocus
+                />
+                <Button size="icon" variant="ghost" onClick={handleSaveDescription} className="text-green-600 hover:text-green-700">
+                  <Check className="w-4 h-4" />
+                </Button>
+                <Button size="icon" variant="ghost" onClick={handleCancelDescriptionEdit} className="text-slate-400 hover:text-slate-600">
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 group">
+                {template.description ? (
+                  <p className="text-sm text-slate-500">{template.description}</p>
+                ) : (
+                  <p className="text-sm text-slate-400 italic">No description</p>
+                )}
+                <Button size="icon" variant="ghost" onClick={handleEditDescription} className="text-slate-400 hover:text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Pencil className="w-3 h-3" />
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
