@@ -271,9 +271,9 @@ export default function AdminUsers() {
                 </SelectContent>
               </Select>
             </div>
-            {form.role === "agent" && (
+            {editing && form.role === "agent" && (
               <div>
-                <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">User Type *</Label>
+                <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">User Type {!editing.user_type && "*"}</Label>
                 <Select value={form.user_type} onValueChange={(val) => setForm({ ...form, user_type: val })}>
                   <SelectTrigger className="mt-1.5">
                     <SelectValue placeholder="Select user type" />
@@ -284,6 +284,9 @@ export default function AdminUsers() {
                     ))}
                   </SelectContent>
                 </Select>
+                {!editing.user_type && form.user_type && (
+                  <p className="text-xs text-slate-500 mt-1.5">Assigning a user type will create their checklist template</p>
+                )}
               </div>
             )}
           </div>
