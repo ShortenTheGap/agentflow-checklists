@@ -47,32 +47,32 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import Home from './pages/Home';
-import AdminDashboard from './pages/AdminDashboard';
-import AgentDashboard from './pages/AgentDashboard';
 import AdminAgents from './pages/AdminAgents';
-import AdminUserTypes from './pages/AdminUserTypes';
-import AdminTemplates from './pages/AdminTemplates';
+import AdminDashboard from './pages/AdminDashboard';
 import AdminSubmissions from './pages/AdminSubmissions';
+import AdminTemplates from './pages/AdminTemplates';
+import AdminUserTypes from './pages/AdminUserTypes';
 import AdminUsers from './pages/AdminUsers';
-import TemplateEditor from './pages/TemplateEditor';
 import AgentChecklistEditor from './pages/AgentChecklistEditor';
+import AgentDashboard from './pages/AgentDashboard';
+import Home from './pages/Home';
 import SubmissionReview from './pages/SubmissionReview';
+import TemplateEditor from './pages/TemplateEditor';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
-    "AdminDashboard": AdminDashboard,
-    "AgentDashboard": AgentDashboard,
     "AdminAgents": AdminAgents,
-    "AdminUserTypes": AdminUserTypes,
-    "AdminTemplates": AdminTemplates,
+    "AdminDashboard": AdminDashboard,
     "AdminSubmissions": AdminSubmissions,
+    "AdminTemplates": AdminTemplates,
+    "AdminUserTypes": AdminUserTypes,
     "AdminUsers": AdminUsers,
-    "TemplateEditor": TemplateEditor,
     "AgentChecklistEditor": AgentChecklistEditor,
+    "AgentDashboard": AgentDashboard,
+    "Home": Home,
     "SubmissionReview": SubmissionReview,
+    "TemplateEditor": TemplateEditor,
 }
 
 export const pagesConfig = {

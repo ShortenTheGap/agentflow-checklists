@@ -123,13 +123,19 @@ export default function AdminUsers() {
         queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
       } else {
-        const invited = await base44.users.inviteUser(form.email, form.role);
+        const inviteRole = form.role === "agent" ? "user" : form.role;
+        const invited = await base44.users.inviteUser(form.email, inviteRole);
         
         if (form.role === "agent" && form.user_type) {
           const checklistId = await duplicateTemplate(invited.id, form.user_type);
           await base44.entities.User.update(invited.id, {
+            role: "agent",
             user_type: form.user_type,
             status: checklistId ? "customizing" : "pending_setup"
+          });
+        } else if (form.role === "agent") {
+          await base44.entities.User.update(invited.id, {
+            role: "agent"
           });
         }
 
