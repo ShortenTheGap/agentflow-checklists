@@ -9,7 +9,6 @@ export default function TaskModal({ task, open, onOpenChange, onSave }) {
     name: "",
     notes: ""
   });
-  const [expandedNotes, setExpandedNotes] = useState(false);
 
   React.useEffect(() => {
     if (open && task) {
