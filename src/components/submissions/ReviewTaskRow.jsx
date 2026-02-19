@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export default function ReviewTaskRow({ task, originalTask }) {
   const [showComparison, setShowComparison] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const isCustom = !task.source_task;
   const isDeleted = task.is_deleted;
@@ -50,8 +51,8 @@ export default function ReviewTaskRow({ task, originalTask }) {
             )}
           </div>
 
-          {task.notes && (
-            <p className="text-xs text-slate-500 mt-1">{task.notes}</p>
+          {isExpanded && task.notes && (
+            <p className="text-xs text-slate-500 mt-2 whitespace-pre-wrap">{task.notes}</p>
           )}
 
           {isModified && changes.length > 0 && (

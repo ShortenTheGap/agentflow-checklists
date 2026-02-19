@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { GripVertical, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { GripVertical, MoreVertical, Pencil, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import { Draggable } from "@hello-pangea/dnd";
 import {
   DropdownMenu,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function TaskRow({ task, index, onEdit, onDelete }) {
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <Draggable draggableId={task.id} index={index}>
@@ -35,12 +36,22 @@ export default function TaskRow({ task, index, onEdit, onDelete }) {
 
           <div className="flex-1 min-w-0">
             <span className="font-medium text-slate-900">{task.name}</span>
-            {task.notes && (
-              <p className="text-xs text-slate-500 mt-1">{task.notes}</p>
+            {isExpanded && task.notes && (
+              <p className="text-xs text-slate-500 mt-2 whitespace-pre-wrap">{task.notes}</p>
             )}
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
+            {task.notes && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="h-7 w-7 text-slate-400 hover:text-slate-600"
+              >
+                {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+              </Button>
+            )}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

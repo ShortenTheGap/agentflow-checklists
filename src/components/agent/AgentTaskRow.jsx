@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { GripVertical, Pencil, Trash2, RotateCcw } from "lucide-react";
+import { GripVertical, Pencil, Trash2, RotateCcw, ChevronDown, ChevronRight } from "lucide-react";
 import { Draggable } from "@hello-pangea/dnd";
 
 export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, onUpdateName, readOnly }) {
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState(task.name);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const isCustom = !task.source_task;
   const isDeleted = task.is_deleted;
@@ -86,12 +87,22 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
               )}
             </div>
 
-            {task.notes && (
-              <p className="text-xs text-slate-500 mt-1">{task.notes}</p>
+            {isExpanded && task.notes && (
+              <p className="text-xs text-slate-500 mt-2 whitespace-pre-wrap">{task.notes}</p>
             )}
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
+            {task.notes && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="h-7 w-7 text-slate-400 hover:text-slate-600"
+              >
+                {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+              </Button>
+            )}
 
             {!readOnly && (
               <>
