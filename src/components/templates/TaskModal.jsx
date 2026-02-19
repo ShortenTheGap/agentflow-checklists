@@ -34,10 +34,18 @@ export default function TaskModal({ task, open, onOpenChange, onSave }) {
   const handleSave = () => {
     if (!formData.name.trim()) return;
     onSave(formData);
+    setFormData({ name: "", notes: "" });
+  };
+
+  const handleOpenChange = (newOpen) => {
+    if (!newOpen) {
+      setFormData({ name: "", notes: "" });
+    }
+    onOpenChange(newOpen);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{task ? "Edit Task" : "Add New Task"}</DialogTitle>
