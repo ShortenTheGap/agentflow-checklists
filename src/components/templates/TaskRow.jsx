@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { GripVertical, MoreVertical, Pencil, Trash2, ChevronDown, ChevronRight } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { GripVertical, MoreVertical, Pencil, Trash2, ChevronDown, ChevronRight, Check, X } from "lucide-react";
 import { Draggable } from "@hello-pangea/dnd";
 import {
   DropdownMenu,
