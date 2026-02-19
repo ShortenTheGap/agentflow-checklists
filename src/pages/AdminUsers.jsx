@@ -140,6 +140,7 @@ export default function AdminUsers() {
         closeDialog();
       } else {
         await base44.entities.User.create({
+          full_name: form.full_name,
           email: form.email,
           role: form.role,
           status: "pending_setup"
@@ -247,16 +248,27 @@ export default function AdminUsers() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             {!editing && (
-              <div>
-                <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Email *</Label>
-                <Input 
-                  type="email"
-                  value={form.email} 
-                  onChange={(e) => setForm({ ...form, email: e.target.value })} 
-                  placeholder="john@example.com" 
-                  className="mt-1.5" 
-                />
-              </div>
+              <>
+                <div>
+                  <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Full Name *</Label>
+                  <Input 
+                    value={form.full_name} 
+                    onChange={(e) => setForm({ ...form, full_name: e.target.value })} 
+                    placeholder="John Doe" 
+                    className="mt-1.5" 
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Email *</Label>
+                  <Input 
+                    type="email"
+                    value={form.email} 
+                    onChange={(e) => setForm({ ...form, email: e.target.value })} 
+                    placeholder="john@example.com" 
+                    className="mt-1.5" 
+                  />
+                </div>
+              </>
             )}
             <div>
               <Label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Role *</Label>
@@ -297,7 +309,7 @@ export default function AdminUsers() {
             <Button variant="outline" onClick={closeDialog} disabled={isCreating}>Cancel</Button>
             <Button 
               onClick={handleSave} 
-              disabled={!form.email || isCreating} 
+              disabled={(!editing && (!form.full_name || !form.email)) || isCreating} 
               className="bg-slate-900 hover:bg-slate-800 text-white"
             >
               {isCreating ? (editing ? "Saving..." : "Inviting...") : editing ? "Save Changes" : "Send Invite"}
