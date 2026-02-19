@@ -84,7 +84,18 @@ export default function ReviewTaskRow({ task, originalTask }) {
           )}
         </div>
 
-
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {task.notes && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="h-7 w-7 text-slate-400 hover:text-slate-600"
+            >
+              {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
