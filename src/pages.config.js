@@ -55,6 +55,7 @@ import AdminUserTypes from './pages/AdminUserTypes';
 import AdminTemplates from './pages/AdminTemplates';
 import AdminSubmissions from './pages/AdminSubmissions';
 import AdminUsers from './pages/AdminUsers';
+import TemplateEditor from './pages/TemplateEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -67,6 +68,7 @@ export const PAGES = {
     "AdminTemplates": AdminTemplates,
     "AdminSubmissions": AdminSubmissions,
     "AdminUsers": AdminUsers,
+    "TemplateEditor": TemplateEditor,
 }
 
 export const pagesConfig = {
