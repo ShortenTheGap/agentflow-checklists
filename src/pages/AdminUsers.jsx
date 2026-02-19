@@ -53,7 +53,7 @@ export default function AdminUsers() {
     setDialogOpen(true);
   };
 
-  const openEdit = (user) => {
+  const openEdit = async (user) => {
     setEditing(user);
     setForm({ 
       full_name: user.full_name || "", 
