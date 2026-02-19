@@ -13,28 +13,12 @@ Deno.serve(async (req) => {
 
     const baseRole = role === 'admin' ? 'admin' : 'user';
     await base44.users.inviteUser(email, baseRole);
-    
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const users = await base44.asServiceRole.entities.User.filter({ email });
-    const invitedUser = users[0];
-    
-    if (!invitedUser) {
-      throw new Error('User creation failed - user not found after invite');
-    }
 
-    const updateData = {
-      full_name: full_name,
-      status: status || 'pending_setup'
-    };
-    
-    if (role && role !== 'user' && role !== 'admin') {
-      updateData.role = role;
-    }
-    
-    const updatedUser = await base44.asServiceRole.entities.User.update(invitedUser.id, updateData);
-
-    return Response.json(updatedUser);
+    return Response.json({ 
+      success: true, 
+      message: 'User invited successfully. They will receive an email to set up their account.',
+      email 
+    });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
