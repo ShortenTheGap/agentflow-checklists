@@ -52,7 +52,7 @@ export default function ReviewTaskRow({ task, originalTask }) {
           </div>
 
           {isExpanded && task.notes && (
-            <p className="text-xs text-slate-500 mt-2 whitespace-pre-wrap">{task.notes}</p>
+            <p className="text-sm text-slate-900 mt-2 whitespace-pre-wrap">{task.notes}</p>
           )}
 
           {isModified && changes.length > 0 && (
