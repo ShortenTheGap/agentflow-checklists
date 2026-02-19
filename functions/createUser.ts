@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
     const { full_name, email, role, status } = await req.json();
 
     const baseRole = role === 'admin' ? 'admin' : 'user';
-    await base44.asServiceRole.users.inviteUser(email, baseRole);
+    await base44.users.inviteUser(email, baseRole);
     
     await new Promise(resolve => setTimeout(resolve, 2000));
     
