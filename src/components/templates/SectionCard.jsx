@@ -13,7 +13,8 @@ export default function SectionCard({
   onDeleteSection, 
   onAddTask, 
   onEditTask, 
-  onDeleteTask 
+  onDeleteTask,
+  onUpdateTaskNotes
 }) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isEditingName, setIsEditingName] = useState(false);
