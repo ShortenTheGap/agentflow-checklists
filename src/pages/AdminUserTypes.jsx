@@ -22,6 +22,19 @@ export default function AdminUserTypes() {
     queryFn: () => base44.entities.UserType.list(),
   });
 
+  const { data: templates = [] } = useQuery({
+    queryKey: ["templates"],
+    queryFn: () => base44.entities.ChecklistTemplate.list(),
+  });
+
+  const { data: users = [] } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => base44.entities.User.list(),
+  });
+
+  const getTemplateCount = (userTypeId) => templates.filter(t => t.user_type === userTypeId).length;
+  const getAgentCount = (userTypeId) => users.filter(u => u.role === "agent" && u.user_type === userTypeId).length;
+
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.UserType.create(data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["userTypes"] }); closeDialog(); },
@@ -86,19 +99,43 @@ export default function AdminUserTypes() {
         <div className="space-y-3">
           {userTypes.map((ut) => (
             <div key={ut.id} className="bg-white rounded-2xl border border-slate-100 px-6 py-4 flex items-center justify-between hover:shadow-sm transition-shadow">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-6 flex-1">
                 <div className={`w-2 h-2 rounded-full ${ut.is_active !== false ? "bg-emerald-400" : "bg-slate-300"}`} />
-                <div>
+                <div className="flex-1">
                   <p className="font-medium text-slate-900">{ut.name}</p>
                   {ut.description && <p className="text-xs text-slate-400 mt-0.5">{ut.description}</p>}
                 </div>
+                <div className="flex items-center gap-8 text-sm">
+                  <div className="text-center">
+                    <p className="font-semibold text-slate-900">{getTemplateCount(ut.id)}</p>
+                    <p className="text-xs text-slate-400">Templates</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-semibold text-slate-900">{getAgentCount(ut.id)}</p>
+                    <p className="text-xs text-slate-400">Agents</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 ml-4">
                 <Button variant="ghost" size="icon" onClick={() => openEdit(ut)} className="text-slate-400 hover:text-slate-600">
                   <Pencil className="w-4 h-4" />
                 </Button>
-                <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(ut.id)} className="text-slate-400 hover:text-red-500">
-                  <Trash2 className="w-4 h-4" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => updateMutation.mutate({ id: ut.id, data: { ...ut, is_active: !ut.is_active } })} 
+                  className="text-slate-400 hover:text-amber-500"
+                  title={ut.is_active !== false ? "Deactivate" : "Activate"}
+                >
+                  {ut.is_active !== false ? (
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  )}
                 </Button>
               </div>
             </div>

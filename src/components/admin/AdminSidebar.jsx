@@ -8,7 +8,7 @@ import { base44 } from "@/api/base44Client";
 
 const navItems = [
   { label: "Dashboard", page: "AdminDashboard", icon: LayoutDashboard },
-  { label: "Agents", page: "AdminAgents", icon: Users },
+  { label: "Users", page: "AdminUsers", icon: Users },
   { label: "User Types", page: "AdminUserTypes", icon: FolderKanban },
   { label: "Templates", page: "AdminTemplates", icon: ListChecks },
   { label: "Submissions", page: "AdminSubmissions", icon: FileText },
