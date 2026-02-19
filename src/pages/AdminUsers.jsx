@@ -281,7 +281,6 @@ export default function AdminUsers() {
               <Select 
                 value={form.role} 
                 onValueChange={(val) => setForm({ ...form, role: val, user_type: val === "admin" ? "" : form.user_type })}
-                disabled={!!editing}
               >
                 <SelectTrigger className="mt-1.5">
                   <SelectValue />
