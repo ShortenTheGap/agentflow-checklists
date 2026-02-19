@@ -102,6 +102,7 @@ export default function SectionCard({
                       index={taskIndex}
                       onEdit={() => onEditTask(task)}
                       onDelete={() => onDeleteTask(task.id)}
+                      onUpdateNotes={onUpdateTaskNotes}
                     />
                   ))}
                   {provided.placeholder}
