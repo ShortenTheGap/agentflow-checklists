@@ -139,7 +139,8 @@ export default function AdminUsers() {
         queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
       } else {
-        await base44.users.inviteUser(form.email, form.role);
+        const inviteRole = form.role === "agent" ? "user" : form.role;
+        await base44.users.inviteUser(form.email, inviteRole);
         
         alert(`Invitation sent to ${form.email}. Once they register, you can assign them a user type and template.`);
         queryClient.invalidateQueries({ queryKey: ["users"] });
