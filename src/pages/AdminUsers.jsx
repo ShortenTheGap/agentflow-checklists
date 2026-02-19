@@ -133,28 +133,27 @@ export default function AdminUsers() {
         closeDialog();
       } else {
         const inviteRole = form.role === "agent" ? "user" : form.role;
-        console.log("Inviting user with email:", form.email, "role:", inviteRole);
-        const invited = await base44.users.inviteUser(form.email, inviteRole);
-        console.log("Invited user response:", invited);
+        await base44.users.inviteUser(form.email, inviteRole);
         
-        if (!invited || !invited.id) {
-          throw new Error("Failed to create user - no user ID returned");
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        const allUsers = await base44.entities.User.list();
+        const newUser = allUsers.find(u => u.email === form.email);
+        
+        if (!newUser) {
+          throw new Error("User invitation sent, but user not found in database yet. Please refresh the page.");
         }
 
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
         if (form.role === "agent" && form.user_type) {
-          console.log("Creating agent checklist for user:", invited.id);
-          const checklistId = await duplicateTemplate(invited.id, form.user_type);
-          console.log("Checklist created:", checklistId);
+          const checklistId = await duplicateTemplate(newUser.id, form.user_type);
           
-          await base44.entities.User.update(invited.id, {
+          await base44.entities.User.update(newUser.id, {
             role: "agent",
             user_type: form.user_type,
             status: checklistId ? "customizing" : "pending_setup"
           });
         } else if (form.role === "agent") {
-          await base44.entities.User.update(invited.id, {
+          await base44.entities.User.update(newUser.id, {
             role: "agent"
           });
         }
