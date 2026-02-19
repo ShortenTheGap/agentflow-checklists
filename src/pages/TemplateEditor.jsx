@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Check, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
@@ -21,6 +21,8 @@ export default function TemplateEditor() {
   const [currentSectionId, setCurrentSectionId] = useState(null);
   const [addingSectionName, setAddingSectionName] = useState("");
   const [showAddSection, setShowAddSection] = useState(false);
+  const [editingTemplateName, setEditingTemplateName] = useState(false);
+  const [newTemplateName, setNewTemplateName] = useState("");
 
   const { data: template } = useQuery({
     queryKey: ["template", templateId],
@@ -97,6 +99,14 @@ export default function TemplateEditor() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks", templateId] }),
   });
 
+  const updateTemplateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.ChecklistTemplate.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["template", templateId] });
+      setEditingTemplateName(false);
+    },
+  });
+
   const sortedSections = [...sections].sort((a, b) => a.sort_order - b.sort_order);
 
   const getUserTypeName = (id) => {
@@ -137,6 +147,21 @@ export default function TemplateEditor() {
         sort_order: maxOrder + 1,
       });
     }
+  };
+
+  const handleEditTemplateName = () => {
+    setNewTemplateName(template.name);
+    setEditingTemplateName(true);
+  };
+
+  const handleSaveTemplateName = () => {
+    if (!newTemplateName.trim()) return;
+    updateTemplateMutation.mutate({ id: templateId, data: { name: newTemplateName.trim() } });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingTemplateName(false);
+    setNewTemplateName("");
   };
 
   const onDragEnd = async (result) => {
@@ -187,8 +212,34 @@ export default function TemplateEditor() {
                 <ArrowLeft className="w-4 h-4" />
               </Button>
             </Link>
-            <div className="flex-1">
-              <h1 className="text-xl font-bold text-slate-900">{template.name}</h1>
+            <div className="flex-1 flex items-center gap-2">
+              {editingTemplateName ? (
+                <div className="flex items-center gap-2 flex-1">
+                  <Input
+                    value={newTemplateName}
+                    onChange={(e) => setNewTemplateName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleSaveTemplateName();
+                      if (e.key === "Escape") handleCancelEdit();
+                    }}
+                    className="text-xl font-bold max-w-lg"
+                    autoFocus
+                  />
+                  <Button size="icon" variant="ghost" onClick={handleSaveTemplateName} className="text-green-600 hover:text-green-700">
+                    <Check className="w-4 h-4" />
+                  </Button>
+                  <Button size="icon" variant="ghost" onClick={handleCancelEdit} className="text-slate-400 hover:text-slate-600">
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <h1 className="text-xl font-bold text-slate-900">{template.name}</h1>
+                  <Button size="icon" variant="ghost" onClick={handleEditTemplateName} className="text-slate-400 hover:text-slate-600">
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                </>
+              )}
             </div>
             <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
               {getUserTypeName(template.user_type)}
