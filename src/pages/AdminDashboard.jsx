@@ -1,0 +1,48 @@
+import React from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import StatsCard from "@/components/admin/StatsCard";
+import AgentTable from "@/components/admin/AgentTable";
+import { Users, Clock, Pencil, Send, CheckCircle } from "lucide-react";
+
+export default function AdminDashboard() {
+  const { data: users = [], isLoading: usersLoading } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => base44.entities.User.list(),
+  });
+
+  const { data: userTypes = [], isLoading: typesLoading } = useQuery({
+    queryKey: ["userTypes"],
+    queryFn: () => base44.entities.UserType.list(),
+  });
+
+  const agents = users.filter((u) => u.role === "agent");
+  const pendingSetup = agents.filter((a) => a.status === "pending_setup" || !a.status).length;
+  const customizing = agents.filter((a) => a.status === "customizing").length;
+  const submitted = agents.filter((a) => a.status === "submitted").length;
+  const approved = agents.filter((a) => a.status === "approved").length;
+
+  return (
+    <div className="p-8 lg:p-10 max-w-7xl">
+      <div className="mb-10">
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Dashboard</h1>
+        <p className="text-sm text-slate-400 mt-1">Overview of agent onboarding progress</p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
+        <StatsCard label="Total Agents" value={agents.length} icon={Users} color="slate" />
+        <StatsCard label="Pending Setup" value={pendingSetup} icon={Clock} color="amber" />
+        <StatsCard label="Customizing" value={customizing} icon={Pencil} color="blue" />
+        <StatsCard label="Submitted" value={submitted} icon={Send} color="purple" />
+        <StatsCard label="Approved" value={approved} icon={CheckCircle} color="emerald" />
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+        <div className="px-6 py-5 border-b border-slate-100">
+          <h2 className="text-base font-semibold text-slate-900">All Agents</h2>
+        </div>
+        <AgentTable agents={agents} userTypes={userTypes} isLoading={usersLoading || typesLoading} />
+      </div>
+    </div>
+  );
+}
