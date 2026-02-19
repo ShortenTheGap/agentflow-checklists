@@ -139,12 +139,8 @@ export default function AdminUsers() {
         queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
       } else {
-        await base44.entities.User.create({
-          full_name: form.full_name,
-          email: form.email,
-          role: form.role,
-          status: "pending_setup"
-        });
+        const inviteRole = form.role === "agent" ? "user" : form.role;
+        await base44.users.inviteUser(form.email, inviteRole);
         
         await queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
