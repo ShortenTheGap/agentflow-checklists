@@ -1,84 +1,94 @@
-import React, { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, ChevronUp, Check, X } from "lucide-react";
 
 export default function TaskModal({ task, open, onOpenChange, onSave }) {
   const [formData, setFormData] = useState({
     name: "",
     notes: ""
   });
+  const [expandedNotes, setExpandedNotes] = useState(false);
 
-  useEffect(() => {
-    if (task) {
+  React.useEffect(() => {
+    if (open && task) {
       setFormData({
         name: task.name || "",
         notes: task.notes || ""
       });
-    } else {
+      setExpandedNotes(!!task.notes);
+    } else if (open && !task) {
       setFormData({
         name: "",
         notes: ""
       });
+      setExpandedNotes(false);
     }
-  }, [task, open]);
+  }, [open, task]);
 
   const handleSave = () => {
     if (!formData.name.trim()) return;
     onSave(formData);
+    setFormData({ name: "", notes: "" });
+    setExpandedNotes(false);
+    onOpenChange(false);
   };
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{task ? "Edit Task" : "Add New Task"}</DialogTitle>
-          <DialogDescription>
-            Enter the task details below
-          </DialogDescription>
-        </DialogHeader>
+  const handleCancel = () => {
+    setFormData({ name: "", notes: "" });
+    setExpandedNotes(false);
+    onOpenChange(false);
+  };
 
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="task-name">Task Name</Label>
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-40 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full">
+        <div className="p-6 space-y-4">
+          <div>
+            <label className="text-sm font-medium text-slate-700 block mb-2">Task Name</label>
             <Input
-              id="task-name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="Enter task name"
+              autoFocus
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="task-notes">Notes (optional)</Label>
-            <Textarea
-              id="task-notes"
-              value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              placeholder="Add task description, instructions, or links..."
-              rows={6}
-              className="resize-none"
-            />
+          <div>
+            <button
+              onClick={() => setExpandedNotes(!expandedNotes)}
+              className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-2 hover:text-slate-900"
+            >
+              {expandedNotes ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              Task Details
+            </button>
+            
+            {expandedNotes && (
+              <Textarea
+                value={formData.notes}
+                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                placeholder="Add task description, instructions, or links..."
+                rows={6}
+                className="resize-none"
+              />
+            )}
           </div>
 
-          <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <div className="flex justify-end gap-2 pt-4 border-t border-slate-200">
+            <Button variant="outline" onClick={handleCancel} className="gap-2">
+              <X className="w-4 h-4" />
               Cancel
             </Button>
-            <Button onClick={handleSave} disabled={!formData.name.trim()}>
+            <Button onClick={handleSave} disabled={!formData.name.trim()} className="gap-2 bg-slate-900 hover:bg-slate-800 text-white">
+              <Check className="w-4 h-4" />
               {task ? "Save Changes" : "Add Task"}
             </Button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }
