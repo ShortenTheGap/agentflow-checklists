@@ -125,22 +125,29 @@ export default function AdminUsers() {
     setIsCreating(true);
     try {
       if (editing) {
-        await base44.entities.User.update(editing.id, {
+        const updateData = {
           role: form.role,
           user_type: form.role === "agent" ? form.user_type : null,
-        });
+        };
+
+        if (form.role === "agent" && form.user_type && !editing.user_type) {
+          const checklistId = await duplicateTemplate(editing.id, form.user_type);
+          updateData.status = checklistId ? "customizing" : "pending_setup";
+        }
+
+        await base44.entities.User.update(editing.id, updateData);
         queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
       } else {
         await base44.users.inviteUser(form.email, form.role);
         
-        alert(`Invitation sent to ${form.email}. Once they accept, you can assign them a template from the user list.`);
+        alert(`Invitation sent to ${form.email}. Once they register, you can assign them a user type and template.`);
         queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
       }
     } catch (error) {
       console.error("Error saving user:", error);
-      alert("Error: " + (error.message || "Failed to create user"));
+      alert("Error: " + (error.message || "Failed to save user"));
       setIsCreating(false);
     }
   };
