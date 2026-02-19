@@ -14,11 +14,16 @@ Deno.serve(async (req) => {
     const baseRole = role === 'admin' ? 'admin' : 'user';
     const invitedUser = await base44.users.inviteUser(email, baseRole);
 
-    const updatedUser = await base44.asServiceRole.entities.User.update(invitedUser.id, {
+    const updateData = {
       full_name: full_name || invitedUser.full_name,
-      role: role || 'agent',
       status: status || 'pending_setup'
-    });
+    };
+    
+    if (role && role !== 'user') {
+      updateData.role = role;
+    }
+    
+    const updatedUser = await base44.asServiceRole.entities.User.update(invitedUser.id, updateData);
 
     return Response.json(updatedUser);
   } catch (error) {
