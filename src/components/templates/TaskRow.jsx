@@ -79,18 +79,7 @@ export default function TaskRow({ task, index, onEdit, onDelete, onUpdateNotes }
                    </div>
                  </div>
                ) : (
-                 <div className="group">
-                   <p className="text-xs text-slate-500 whitespace-pre-wrap">{task.notes}</p>
-                   <Button
-                     size="sm"
-                     variant="ghost"
-                     onClick={() => setIsEditingNotes(true)}
-                     className="h-6 mt-1 text-slate-400 hover:text-slate-600 gap-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                   >
-                     <Pencil className="w-3 h-3" />
-                     Edit
-                   </Button>
-                 </div>
+                 <p className="text-xs text-slate-500 whitespace-pre-wrap">{task.notes}</p>
                )}
              </div>
            )}
