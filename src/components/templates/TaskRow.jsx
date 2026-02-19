@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { GripVertical, MoreVertical, Pencil, Trash2, ChevronDown, ChevronRight, Check, X } from "lucide-react";
