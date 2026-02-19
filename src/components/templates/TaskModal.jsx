@@ -16,13 +16,11 @@ export default function TaskModal({ task, open, onOpenChange, onSave }) {
         name: task.name || "",
         notes: task.notes || ""
       });
-      setExpandedNotes(!!task.notes);
     } else if (open && !task) {
       setFormData({
         name: "",
         notes: ""
       });
-      setExpandedNotes(false);
     }
   }, [open, task]);
 
