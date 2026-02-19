@@ -132,38 +132,9 @@ export default function AdminUsers() {
         queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
       } else {
-        const inviteRole = form.role === "agent" ? "user" : form.role;
-        await base44.users.inviteUser(form.email, inviteRole);
+        await base44.users.inviteUser(form.email, form.role);
         
-        let newUser = null;
-        for (let i = 0; i < 10; i++) {
-          await new Promise(resolve => setTimeout(resolve, 500));
-          const allUsers = await base44.entities.User.list();
-          newUser = allUsers.find(u => u.email === form.email);
-          if (newUser) break;
-        }
-        
-        if (!newUser) {
-          alert("User invited successfully, but setup is taking longer than expected. Please refresh the page to complete setup.");
-          queryClient.invalidateQueries({ queryKey: ["users"] });
-          closeDialog();
-          return;
-        }
-
-        if (form.role === "agent" && form.user_type) {
-          const checklistId = await duplicateTemplate(newUser.id, form.user_type);
-          
-          await base44.entities.User.update(newUser.id, {
-            role: "agent",
-            user_type: form.user_type,
-            status: checklistId ? "customizing" : "pending_setup"
-          });
-        } else if (form.role === "agent") {
-          await base44.entities.User.update(newUser.id, {
-            role: "agent"
-          });
-        }
-
+        alert(`Invitation sent to ${form.email}. Once they accept, you can assign them a template from the user list.`);
         queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
       }
