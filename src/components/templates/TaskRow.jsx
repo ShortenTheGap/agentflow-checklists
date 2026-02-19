@@ -47,7 +47,7 @@ export default function TaskRow({ task, index, onEdit, onDelete, onUpdateNotes }
 
           <div className="flex-1 min-w-0">
            <span className="font-medium text-slate-900">{task.name}</span>
-           {isExpanded && task.notes && (
+           {(isExpanded || isEditingNotes) && task.notes && (
              <div className="mt-2">
                {isEditingNotes ? (
                  <div className="space-y-2">
