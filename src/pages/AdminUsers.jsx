@@ -91,8 +91,8 @@ export default function AdminUsers() {
       const tasks = await base44.entities.TemplateTask.filter({ section: section.id });
       const sortedTasks = tasks.sort((a, b) => a.sort_order - b.sort_order);
 
-      for (const task of sortedTasks) {
-        await base44.entities.AgentTask.create({
+      const taskPromises = sortedTasks.map(task => 
+        base44.entities.AgentTask.create({
           agent_section: agentSection.id,
           source_task: task.id,
           name: task.name,
@@ -105,8 +105,10 @@ export default function AdminUsers() {
           notes: task.notes || "",
           is_deleted: false,
           is_modified: false
-        });
-      }
+        })
+      );
+
+      await Promise.all(taskPromises);
     }
 
     return agentChecklist.id;
