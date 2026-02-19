@@ -14,6 +14,14 @@ export default function TaskRow({ task, index, onEdit, onDelete, onUpdateNotes }
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [editedNotes, setEditedNotes] = useState(task.notes || "");
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (isEditingNotes && textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+    }
+  }, [isEditingNotes, editedNotes]);
 
   return (
     <Draggable draggableId={task.id} index={index}>
