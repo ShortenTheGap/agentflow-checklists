@@ -146,7 +146,7 @@ export default function AdminUsers() {
           status: "pending_setup"
         });
         
-        queryClient.invalidateQueries({ queryKey: ["users"] });
+        await queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
       }
     } catch (error) {
