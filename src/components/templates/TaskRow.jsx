@@ -52,10 +52,11 @@ export default function TaskRow({ task, index, onEdit, onDelete, onUpdateNotes }
                {isEditingNotes ? (
                  <div className="space-y-2">
                    <Textarea
+                     ref={textareaRef}
                      value={editedNotes}
                      onChange={(e) => setEditedNotes(e.target.value)}
                      className="text-xs resize-none"
-                     rows={4}
+                     rows={1}
                    />
                    <div className="flex gap-2">
                      <Button
