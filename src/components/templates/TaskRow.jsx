@@ -104,9 +104,13 @@ export default function TaskRow({ task, index, onEdit, onDelete, onUpdateNotes }
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setIsEditingNotes(true)} className="gap-2">
+                  <Pencil className="w-3.5 h-3.5" />
+                  Edit Notes
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={onEdit} className="gap-2">
                   <Pencil className="w-3.5 h-3.5" />
-                  Edit
+                  Edit Task
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={onDelete} className="gap-2 text-red-600">
                   <Trash2 className="w-3.5 h-3.5" />
