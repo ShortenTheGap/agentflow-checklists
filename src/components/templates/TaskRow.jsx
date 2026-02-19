@@ -99,7 +99,13 @@ export default function TaskRow({ task, index, onEdit, onDelete, onUpdateNotes }
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsExpanded(!isExpanded)}
+                onClick={() => {
+                  if (isEditingNotes && editedNotes !== task.notes) {
+                    onUpdateNotes(task.id, editedNotes);
+                  }
+                  setIsEditingNotes(false);
+                  setIsExpanded(!isExpanded);
+                }}
                 className="h-7 w-7 text-slate-400 hover:text-slate-600"
               >
                 {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
