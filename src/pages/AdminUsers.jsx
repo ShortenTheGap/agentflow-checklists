@@ -135,13 +135,19 @@ export default function AdminUsers() {
         const inviteRole = form.role === "agent" ? "user" : form.role;
         await base44.users.inviteUser(form.email, inviteRole);
         
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        const allUsers = await base44.entities.User.list();
-        const newUser = allUsers.find(u => u.email === form.email);
+        let newUser = null;
+        for (let i = 0; i < 10; i++) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+          const allUsers = await base44.entities.User.list();
+          newUser = allUsers.find(u => u.email === form.email);
+          if (newUser) break;
+        }
         
         if (!newUser) {
-          throw new Error("User invitation sent, but user not found in database yet. Please refresh the page.");
+          alert("User invited successfully, but setup is taking longer than expected. Please refresh the page to complete setup.");
+          queryClient.invalidateQueries({ queryKey: ["users"] });
+          closeDialog();
+          return;
         }
 
         if (form.role === "agent" && form.user_type) {
