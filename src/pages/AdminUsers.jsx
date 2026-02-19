@@ -150,7 +150,7 @@ export default function AdminUsers() {
           throw new Error(response.data.error);
         }
         
-        await queryClient.refetchQueries({ queryKey: ["users"] });
+        queryClient.invalidateQueries({ queryKey: ["users"] });
         closeDialog();
       }
     } catch (error) {
