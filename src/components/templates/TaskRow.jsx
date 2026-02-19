@@ -9,8 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function TaskRow({ task, index, onEdit, onDelete }) {
+export default function TaskRow({ task, index, onEdit, onDelete, onUpdateNotes }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
+  const [editedNotes, setEditedNotes] = useState(task.notes || "");
 
   return (
     <Draggable draggableId={task.id} index={index}>
