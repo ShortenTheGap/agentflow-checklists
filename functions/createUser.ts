@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
 
     const { full_name, email, role, status } = await req.json();
 
-    const invitedUser = await base44.users.inviteUser(email, role);
+    const invitedUser = await base44.asServiceRole.users.inviteUser(email, role);
 
     const updatedUser = await base44.asServiceRole.entities.User.update(invitedUser.id, {
       full_name: full_name || invitedUser.full_name,
