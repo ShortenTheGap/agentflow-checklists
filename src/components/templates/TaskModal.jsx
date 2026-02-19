@@ -1,7 +1,14 @@
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Check, X } from "lucide-react";
 
 export default function TaskModal({ task, open, onOpenChange, onSave }) {
@@ -10,41 +17,37 @@ export default function TaskModal({ task, open, onOpenChange, onSave }) {
     notes: ""
   });
 
-  React.useEffect(() => {
-    if (open && task) {
+  useEffect(() => {
+    if (task) {
       setFormData({
         name: task.name || "",
         notes: task.notes || ""
       });
-    } else if (open && !task) {
+    } else {
       setFormData({
         name: "",
         notes: ""
       });
     }
-  }, [open, task]);
+  }, [task, open]);
 
   const handleSave = () => {
     if (!formData.name.trim()) return;
     onSave(formData);
-    setFormData({ name: "", notes: "" });
-    onOpenChange(false);
   };
-
-  const handleCancel = () => {
-    setFormData({ name: "", notes: "" });
-    onOpenChange(false);
-  };
-
-  if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-40 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full">
-        <div className="p-6 space-y-4">
-          <div>
-            <label className="text-sm font-medium text-slate-700 block mb-2">Task Name</label>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{task ? "Edit Task" : "Add New Task"}</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="task-name">Task Name</Label>
             <Input
+              id="task-name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="Enter task name"
@@ -52,9 +55,10 @@ export default function TaskModal({ task, open, onOpenChange, onSave }) {
             />
           </div>
 
-          <div>
-            <label className="text-sm font-medium text-slate-700 block mb-2">Task Details (optional)</label>
+          <div className="space-y-2">
+            <Label htmlFor="task-notes">Task Details (optional)</Label>
             <Textarea
+              id="task-notes"
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               placeholder="Add task description, instructions, or links..."
@@ -64,7 +68,7 @@ export default function TaskModal({ task, open, onOpenChange, onSave }) {
           </div>
 
           <div className="flex justify-end gap-2 pt-4 border-t border-slate-200">
-            <Button variant="outline" onClick={handleCancel} className="gap-2">
+            <Button variant="outline" onClick={() => onOpenChange(false)} className="gap-2">
               <X className="w-4 h-4" />
               Cancel
             </Button>
@@ -74,7 +78,7 @@ export default function TaskModal({ task, open, onOpenChange, onSave }) {
             </Button>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
