@@ -138,6 +138,10 @@ export default function TemplateEditor() {
     setTaskModalOpen(true);
   };
 
+  const handleUpdateTaskNotes = (taskId, notes) => {
+    updateTaskMutation.mutate({ id: taskId, data: { notes } });
+  };
+
   const handleSaveTask = (formData) => {
     if (editingTask) {
       updateTaskMutation.mutate({ id: editingTask.id, data: formData });
