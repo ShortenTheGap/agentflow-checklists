@@ -34,7 +34,6 @@ export default function TaskModal({ task, open, onOpenChange, onSave }) {
 
   const handleCancel = () => {
     setFormData({ name: "", notes: "" });
-    setExpandedNotes(false);
     onOpenChange(false);
   };
 
