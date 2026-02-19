@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
 import StatusBadge from "@/components/StatusBadge";
 import { Clock, Pencil, Send, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import AgentChecklistEditor from "./AgentChecklistEditor";
 
 export default function AgentDashboard() {
   const [user, setUser] = useState(null);
@@ -32,6 +32,14 @@ export default function AgentDashboard() {
   }
 
   const status = user?.status || "pending_setup";
+
+  if (status === "customizing") {
+    return <AgentChecklistEditor />;
+  }
+
+  if (status === "submitted") {
+    return <AgentChecklistEditor />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -64,37 +72,7 @@ export default function AgentDashboard() {
           </div>
         )}
 
-        {status === "customizing" && (
-          <div className="text-center">
-            <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <Pencil className="w-8 h-8 text-blue-500" />
-            </div>
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Customize Your Checklist</h2>
-            <p className="text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
-              Your checklist is ready for customization. Review the tasks and make any changes you need.
-            </p>
-            <div className="mt-6">
-              <StatusBadge status="customizing" />
-            </div>
-            {/* Checklist editor will be built in Prompt 2 */}
-          </div>
-        )}
 
-        {status === "submitted" && (
-          <div className="text-center">
-            <div className="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <Send className="w-8 h-8 text-purple-500" />
-            </div>
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Checklist Submitted</h2>
-            <p className="text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
-              Your checklist has been submitted for review. You'll be notified once it's approved.
-            </p>
-            <div className="mt-6">
-              <StatusBadge status="submitted" />
-            </div>
-            {/* Read-only view of submitted checklist will be built in Prompt 2 */}
-          </div>
-        )}
 
         {status === "approved" && (
           <div className="text-center">
