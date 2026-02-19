@@ -133,10 +133,21 @@ export default function AdminUsers() {
         closeDialog();
       } else {
         const inviteRole = form.role === "agent" ? "user" : form.role;
+        console.log("Inviting user with email:", form.email, "role:", inviteRole);
         const invited = await base44.users.inviteUser(form.email, inviteRole);
+        console.log("Invited user response:", invited);
         
+        if (!invited || !invited.id) {
+          throw new Error("Failed to create user - no user ID returned");
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
         if (form.role === "agent" && form.user_type) {
+          console.log("Creating agent checklist for user:", invited.id);
           const checklistId = await duplicateTemplate(invited.id, form.user_type);
+          console.log("Checklist created:", checklistId);
+          
           await base44.entities.User.update(invited.id, {
             role: "agent",
             user_type: form.user_type,
@@ -153,7 +164,7 @@ export default function AdminUsers() {
       }
     } catch (error) {
       console.error("Error saving user:", error);
-      alert("Error: " + error.message);
+      alert("Error: " + (error.message || "Failed to create user"));
       setIsCreating(false);
     }
   };
