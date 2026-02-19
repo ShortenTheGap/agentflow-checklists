@@ -88,7 +88,7 @@ export default function TaskRow({ task, index, onEdit, onDelete, onUpdateNotes }
                    </div>
                  </div>
                ) : (
-                 <p className="text-xs text-slate-500 whitespace-pre-wrap">{task.notes}</p>
+                 <p className="text-sm text-slate-900 whitespace-pre-wrap">{task.notes}</p>
                )}
              </div>
            )}
