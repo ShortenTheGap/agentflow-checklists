@@ -68,7 +68,10 @@ export default function AdminUsers() {
 
   const duplicateTemplate = async (userId, userTypeId) => {
     const template = templates.find(t => t.user_type === userTypeId && t.is_active !== false);
-    if (!template) return null;
+    if (!template) {
+      console.log("No template found for user type:", userTypeId);
+      return null;
+    }
 
     const agentChecklist = await base44.entities.AgentChecklist.create({
       agent: userId,
@@ -76,10 +79,14 @@ export default function AdminUsers() {
       status: "draft"
     });
 
-    const sections = await base44.entities.TemplateSection.filter({ template: template.id });
-    const sortedSections = sections.sort((a, b) => a.sort_order - b.sort_order);
+    const [sections, allTasks] = await Promise.all([
+      base44.entities.TemplateSection.filter({ template: template.id }),
+      base44.entities.TemplateTask.list()
+    ]);
 
-    for (const section of sortedSections) {
+    const sortedSections = sections.sort((a, b) => a.sort_order - b.sort_order);
+    
+    const sectionPromises = sortedSections.map(async (section) => {
       const agentSection = await base44.entities.AgentSection.create({
         agent_checklist: agentChecklist.id,
         source_section: section.id,
@@ -88,28 +95,28 @@ export default function AdminUsers() {
         is_deleted: false
       });
 
-      const tasks = await base44.entities.TemplateTask.filter({ section: section.id });
-      const sortedTasks = tasks.sort((a, b) => a.sort_order - b.sort_order);
+      const sectionTasks = allTasks
+        .filter(t => t.section === section.id)
+        .sort((a, b) => a.sort_order - b.sort_order);
 
-      const taskPromises = sortedTasks.map(task => 
-        base44.entities.AgentTask.create({
-          agent_section: agentSection.id,
-          source_task: task.id,
-          name: task.name,
-          sort_order: task.sort_order,
-          task_type: task.task_type || "task",
-          action_type: task.action_type || "none",
-          resource_tags: task.resource_tags || [],
-          visibility: task.visibility || "internal",
-          timing_trigger: task.timing_trigger || "",
-          notes: task.notes || "",
-          is_deleted: false,
-          is_modified: false
-        })
-      );
+      const taskData = sectionTasks.map(task => ({
+        agent_section: agentSection.id,
+        source_task: task.id,
+        name: task.name,
+        sort_order: task.sort_order,
+        notes: task.notes || "",
+        is_deleted: false,
+        is_modified: false
+      }));
 
-      await Promise.all(taskPromises);
-    }
+      if (taskData.length > 0) {
+        await base44.entities.AgentTask.bulkCreate(taskData);
+      }
+
+      return agentSection;
+    });
+
+    await Promise.all(sectionPromises);
 
     return agentChecklist.id;
   };
