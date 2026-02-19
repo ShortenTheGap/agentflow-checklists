@@ -12,10 +12,19 @@ Deno.serve(async (req) => {
     const { full_name, email, role, status } = await req.json();
 
     const baseRole = role === 'admin' ? 'admin' : 'user';
-    const invitedUser = await base44.users.inviteUser(email, baseRole);
+    await base44.users.inviteUser(email, baseRole);
+    
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const users = await base44.asServiceRole.entities.User.filter({ email });
+    const invitedUser = users[0];
+    
+    if (!invitedUser) {
+      throw new Error('User creation failed');
+    }
 
     const updateData = {
-      full_name: full_name || invitedUser.full_name,
+      full_name: full_name,
       status: status || 'pending_setup'
     };
     
