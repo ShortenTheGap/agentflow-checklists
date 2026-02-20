@@ -8,19 +8,15 @@ export default function Home() {
   useEffect(() => {
     const route = async () => {
       try {
-        const isAuthenticated = await base44.auth.isAuthenticated();
-        if (!isAuthenticated) {
-          setLoading(false);
-          return;
-        }
         const user = await base44.auth.me();
-        if (user.role === "admin") {
-          window.location.replace(createPageUrl("AdminDashboard"));
+        if (user?.role === "admin") {
+          window.location.href = createPageUrl("AdminDashboard");
+        } else if (user) {
+          window.location.href = createPageUrl("AgentDashboard");
         } else {
-          window.location.replace(createPageUrl("AgentDashboard"));
+          setLoading(false);
         }
-      } catch (err) {
-        console.error("Auth check error:", err);
+      } catch {
         setLoading(false);
       }
     };
