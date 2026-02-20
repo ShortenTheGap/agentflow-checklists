@@ -23,7 +23,7 @@ export default function AgentDashboard() {
           setChecklist(checklists[0]);
         }
       } catch {
-        base44.auth.redirectToLogin();
+        base44.auth.redirectToLogin(createPageUrl("AgentDashboard"));
       } finally {
         setLoading(false);
       }
