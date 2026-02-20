@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+// Agent task row with three-dot menu
 export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, onUpdateNotes, readOnly }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
