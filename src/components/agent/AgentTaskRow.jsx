@@ -143,7 +143,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
               </Button>
             )}
 
-            {!isDeleted && !readOnly && (
+            {!isDeleted && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-slate-600">
@@ -178,8 +178,6 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
                 <RotateCcw className="w-4 h-4" />
               </Button>
             )}
-
-
           </div>
         </div>
       )}
