@@ -125,7 +125,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
-            {!isDeleted && task.notes && (
+            {task.notes && !isDeleted && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -142,10 +142,10 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
               </Button>
             )}
 
-            {!readOnly && !isDeleted && (
+            {!isDeleted && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-slate-600">
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-slate-600" disabled={readOnly}>
                     <MoreVertical className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -166,12 +166,13 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
               </DropdownMenu>
             )}
 
-            {!readOnly && isDeleted && (
+            {isDeleted && (
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={() => onUndo(task.id)}
                 className="h-7 text-blue-600 hover:text-blue-700 gap-1 text-xs"
+                disabled={readOnly}
               >
                 <RotateCcw className="w-3 h-3" />
                 Undo
