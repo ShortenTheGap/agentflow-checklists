@@ -266,18 +266,12 @@ export default function AgentChecklistEditor() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-20">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex-1">
-            <h1 className="text-lg font-bold text-slate-900">
-              {readOnly ? "Your Checklist" : "Customize Your Checklist"}: {template.name}
+            <h1 className="text-xl font-bold text-slate-900">
+              {template.name}
             </h1>
-            {readOnly ? (
-              <p className="text-xs text-slate-500 mt-1">
-                Submitted on {checklist.submitted_at ? format(new Date(checklist.submitted_at), "MMM d, yyyy") : "—"} — Pending Review
-              </p>
-            ) : (
-              <p className="text-xs text-slate-500 mt-1">
-                {activeTasks.length} of {totalTasks} tasks
-              </p>
-            )}
+            <p className="text-sm text-slate-500 mt-1">
+              {template.description}
+            </p>
           </div>
           <div className="flex items-center gap-3">
             {!readOnly && (
