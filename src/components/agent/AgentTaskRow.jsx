@@ -83,7 +83,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
                       ref={textareaRef}
                       value={editedNotes}
                       onChange={(e) => setEditedNotes(e.target.value)}
-                      className="text-sm resize-none"
+                      className="text-sm resize-none text-slate-900"
                       rows={1}
                     />
                     <div className="flex gap-2">
