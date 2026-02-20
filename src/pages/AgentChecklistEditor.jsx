@@ -102,7 +102,7 @@ export default function AgentChecklistEditor() {
   });
 
   const sortedSections = [...sections].filter(s => !s.is_deleted).sort((a, b) => a.sort_order - b.sort_order);
-  const readOnly = checklist?.status !== "draft";
+  const readOnly = checklist?.status === "submitted" || checklist?.status === "approved";
 
   const handleAddSection = () => {
     if (!addingSectionName.trim()) return;
