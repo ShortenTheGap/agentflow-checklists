@@ -53,11 +53,11 @@ import AdminSubmissions from './pages/AdminSubmissions';
 import AdminTemplates from './pages/AdminTemplates';
 import AdminUserTypes from './pages/AdminUserTypes';
 import AdminUsers from './pages/AdminUsers';
-import AgentChecklistEditor from './pages/AgentChecklistEditor';
 import AgentDashboard from './pages/AgentDashboard';
 import Home from './pages/Home';
 import SubmissionReview from './pages/SubmissionReview';
 import TemplateEditor from './pages/TemplateEditor';
+import AgentChecklistEditor from './pages/AgentChecklistEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -68,11 +68,11 @@ export const PAGES = {
     "AdminTemplates": AdminTemplates,
     "AdminUserTypes": AdminUserTypes,
     "AdminUsers": AdminUsers,
-    "AgentChecklistEditor": AgentChecklistEditor,
     "AgentDashboard": AgentDashboard,
     "Home": Home,
     "SubmissionReview": SubmissionReview,
     "TemplateEditor": TemplateEditor,
+    "AgentChecklistEditor": AgentChecklistEditor,
 }
 
 export const pagesConfig = {

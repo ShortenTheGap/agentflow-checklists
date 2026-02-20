@@ -7,6 +7,7 @@ import AgentChecklistEditor from "./AgentChecklistEditor";
 
 export default function AgentDashboard() {
   const [user, setUser] = useState(null);
+  const [checklist, setChecklist] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,6 +15,12 @@ export default function AgentDashboard() {
       try {
         const me = await base44.auth.me();
         setUser(me);
+        
+        // Fetch agent's checklist
+        const checklists = await base44.entities.AgentChecklist.filter({ agent: me.id });
+        if (checklists && checklists.length > 0) {
+          setChecklist(checklists[0]);
+        }
       } catch {
         base44.auth.redirectToLogin();
       } finally {
@@ -31,9 +38,9 @@ export default function AgentDashboard() {
     );
   }
 
-  const status = user?.status || "pending_setup";
+  const status = checklist?.status || "pending_setup";
 
-  if (status === "customizing") {
+  if (status === "draft" || status === "revision_requested") {
     return <AgentChecklistEditor />;
   }
 
@@ -57,7 +64,7 @@ export default function AgentDashboard() {
       </header>
 
       <main className="max-w-3xl mx-auto px-6 py-16">
-        {status === "pending_setup" && (
+        {!checklist && (
           <div className="text-center">
             <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <Clock className="w-8 h-8 text-amber-500" />
@@ -74,7 +81,7 @@ export default function AgentDashboard() {
 
 
 
-        {status === "approved" && (
+        {status === "approved" && checklist && (
           <div className="text-center">
             <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <svg className="w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
