@@ -10,7 +10,7 @@ export default function Home() {
       try {
         const isAuthenticated = await base44.auth.isAuthenticated();
         if (!isAuthenticated) {
-          base44.auth.redirectToLogin(window.location.href);
+          base44.auth.redirectToLogin(createPageUrl("Home"));
           return;
         }
         const user = await base44.auth.me();
