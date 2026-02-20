@@ -43,7 +43,7 @@ export default function AgentChecklistEditor() {
     queryKey: ["agentChecklist", user?.id],
     queryFn: async () => {
       const lists = await base44.entities.AgentChecklist.filter({ agent: user.id });
-      return lists[0];
+      return lists[0] || null;
     },
     enabled: !!user?.id,
   });
