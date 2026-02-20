@@ -33,10 +33,10 @@ export default function AgentChecklistEditor() {
         const me = await base44.auth.me();
         setUser(me);
       } catch {
-        base44.auth.redirectToLogin();
-      }
-    };
-    load();
+              base44.auth.redirectToLogin(createPageUrl("AgentChecklistEditor"));
+            }
+          };
+          load();
   }, []);
 
   const { data: checklist } = useQuery({
