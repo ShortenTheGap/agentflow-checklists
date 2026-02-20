@@ -29,8 +29,12 @@ export default function AgentChecklistEditor() {
 
   useEffect(() => {
     const load = async () => {
-      const me = await base44.auth.me();
-      setUser(me);
+      try {
+        const me = await base44.auth.me();
+        setUser(me);
+      } catch {
+        base44.auth.redirectToLogin();
+      }
     };
     load();
   }, []);
