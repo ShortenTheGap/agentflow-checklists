@@ -95,9 +95,20 @@ export default function AdminUserTypes() {
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">User Types</h1>
           <p className="text-sm text-slate-400 mt-1">Define agent categories for checklist templates</p>
         </div>
-        <Button onClick={openCreate} className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl gap-2">
-          <Plus className="w-4 h-4" /> Add Type
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={handleExport} 
+            disabled={isExporting}
+            className="gap-2"
+            variant="outline"
+          >
+            <Download className="w-4 h-4" />
+            {isExporting ? 'Exporting...' : 'Export'}
+          </Button>
+          <Button onClick={openCreate} className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl gap-2">
+            <Plus className="w-4 h-4" /> Add Type
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (
