@@ -75,17 +75,21 @@ export default function AdminUserTypes() {
 
   const handleExport = async () => {
     setIsExporting(true);
-    const response = await base44.functions.invoke('exportUserTypes');
-    const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'user_types_export.json';
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    a.remove();
-    setIsExporting(false);
+    try {
+      const response = await base44.functions.invoke('exportUserTypes');
+      const jsonData = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'user_types_export.json';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
