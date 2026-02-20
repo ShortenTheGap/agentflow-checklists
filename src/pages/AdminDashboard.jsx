@@ -25,20 +25,23 @@ export default function AdminDashboard() {
   const submitted = agents.filter((a) => a.status === "submitted").length;
   const approved = agents.filter((a) => a.status === "approved").length;
 
-  const handleExportTemplates = async () => {
+  const downloadJSON = async (functionName, filename) => {
     setIsExporting(true);
-    const response = await base44.functions.invoke('exportTemplates');
+    const response = await base44.functions.invoke(functionName);
     const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'templates_export.json';
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
     a.remove();
     setIsExporting(false);
   };
+
+  const handleExportTemplates = () => downloadJSON('exportTemplates', 'templates_export.json');
+  const handleExportUserTypes = () => downloadJSON('exportUserTypes', 'user_types_export.json');
 
   return (
     <div className="p-8 lg:p-10 max-w-7xl">
