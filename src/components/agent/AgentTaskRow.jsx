@@ -125,7 +125,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
-            {task.notes && !isDeleted && (
+            {task.notes && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -142,10 +142,10 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
               </Button>
             )}
 
-            {!isDeleted && (
+            {!readOnly && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-slate-600" disabled={readOnly}>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-slate-600">
                     <MoreVertical className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -158,25 +158,19 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
                     <Pencil className="w-3.5 h-3.5" />
                     Edit Task
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onDelete(task.id)} className="gap-2 text-red-600">
-                    <Trash2 className="w-3.5 h-3.5" />
-                    Delete
-                  </DropdownMenuItem>
+                  {isDeleted ? (
+                    <DropdownMenuItem onClick={() => onUndo(task.id)} className="gap-2 text-blue-600">
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      Undo Delete
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem onClick={() => onDelete(task.id)} className="gap-2 text-red-600">
+                      <Trash2 className="w-3.5 h-3.5" />
+                      Delete
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
-            )}
-
-            {isDeleted && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => onUndo(task.id)}
-                className="h-7 text-blue-600 hover:text-blue-700 gap-1 text-xs"
-                disabled={readOnly}
-              >
-                <RotateCcw className="w-3 h-3" />
-                Undo
-              </Button>
             )}
           </div>
         </div>
