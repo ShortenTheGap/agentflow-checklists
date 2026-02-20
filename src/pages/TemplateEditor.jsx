@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Plus, Pencil, Check, X } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Check, X, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
@@ -26,6 +26,7 @@ export default function TemplateEditor() {
   const [newTemplateName, setNewTemplateName] = useState("");
   const [editingDescription, setEditingDescription] = useState(false);
   const [newDescription, setNewDescription] = useState("");
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const { data: template } = useQuery({
     queryKey: ["template", templateId],
@@ -185,6 +186,22 @@ export default function TemplateEditor() {
     setNewDescription("");
   };
 
+  const handleSyncTemplate = async () => {
+    setIsSyncing(true);
+    try {
+      const allChecklists = await base44.entities.AgentChecklist.filter({ source_template: templateId });
+      
+      for (const checklist of allChecklists) {
+        await base44.functions.invoke('refreshAgentChecklist', { agentChecklistId: checklist.id });
+      }
+      
+      queryClient.invalidateQueries();
+    } catch (error) {
+      console.error("Sync failed:", error);
+    }
+    setIsSyncing(false);
+  };
+
   const onDragEnd = async (result) => {
     if (!result.destination) return;
 
@@ -262,9 +279,16 @@ export default function TemplateEditor() {
                 </>
               )}
             </div>
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-              {getUserTypeName(template.user_type)}
-            </Badge>
+            <Button
+              onClick={handleSyncTemplate}
+              disabled={isSyncing}
+              variant="outline"
+              size="sm"
+              className="gap-2 text-slate-600 hover:text-slate-900"
+            >
+              <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+              {isSyncing ? 'Syncing...' : 'Sync to Agents'}
+            </Button>
           </div>
           <div className="ml-14">
             {editingDescription ? (

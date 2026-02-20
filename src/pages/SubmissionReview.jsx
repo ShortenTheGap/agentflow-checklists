@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
+import { ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import StatusBadge from "@/components/StatusBadge";
@@ -24,7 +24,6 @@ export default function SubmissionReview() {
   const [revisionModalOpen, setRevisionModalOpen] = useState(false);
   const [revisionNotes, setRevisionNotes] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { data: checklist } = useQuery({
     queryKey: ["checklist", checklistId],
@@ -110,17 +109,6 @@ export default function SubmissionReview() {
     setIsProcessing(false);
   };
 
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-    try {
-      await base44.functions.invoke('refreshAgentChecklist', { agentChecklistId: checklistId });
-      queryClient.invalidateQueries();
-    } catch (error) {
-      console.error("Refresh failed:", error);
-    }
-    setIsRefreshing(false);
-  };
-
   if (!checklist || !agent || !template) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -149,16 +137,6 @@ export default function SubmissionReview() {
                 {template.name} • Submitted {checklist.submitted_at ? format(new Date(checklist.submitted_at), "MMM d, yyyy") : "—"}
               </p>
             </div>
-            <Button
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-              variant="outline"
-              size="sm"
-              className="gap-2 text-slate-600 hover:text-slate-900"
-            >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-              {isRefreshing ? 'Syncing...' : 'Sync Template'}
-            </Button>
             <StatusBadge status={checklist.status} />
           </div>
 
