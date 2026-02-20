@@ -40,11 +40,7 @@ export default function AgentDashboard() {
 
   const status = checklist?.status || "pending_setup";
 
-  if (status === "draft" || status === "revision_requested") {
-    return <AgentChecklistEditor />;
-  }
-
-  if (status === "submitted") {
+  if (status === "draft" || status === "revision_requested" || status === "submitted") {
     return <AgentChecklistEditor />;
   }
 
