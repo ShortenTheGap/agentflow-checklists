@@ -16,6 +16,7 @@ export default function AdminUserTypes() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ name: "", description: "", is_active: true });
+  const [isExporting, setIsExporting] = useState(false);
 
   const { data: userTypes = [], isLoading } = useQuery({
     queryKey: ["userTypes"],
