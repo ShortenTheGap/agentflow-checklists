@@ -37,12 +37,15 @@ Deno.serve(async (req) => {
       });
 
       // Delete old tasks and sections
-      for (const task of agentTasks) {
-        await base44.asServiceRole.entities.AgentTask.delete(task.id);
+      const taskIds = agentTasks.map(t => t.id);
+      const sectionIds = agentSections.map(s => s.id);
+      
+      for (const taskId of taskIds) {
+        await base44.asServiceRole.entities.AgentTask.delete(taskId);
       }
 
-      for (const section of agentSections) {
-        await base44.asServiceRole.entities.AgentSection.delete(section.id);
+      for (const sectionId of sectionIds) {
+        await base44.asServiceRole.entities.AgentSection.delete(sectionId);
       }
 
       // Get template sections and tasks
