@@ -83,7 +83,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
                       ref={textareaRef}
                       value={editedNotes}
                       onChange={(e) => setEditedNotes(e.target.value)}
-                      className="text-sm resize-none text-slate-900"
+                      className="text-xs resize-none text-slate-900"
                       rows={1}
                     />
                     <div className="flex gap-2">
@@ -150,10 +150,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => {
-                    setIsExpanded(true);
-                    setIsEditingNotes(true);
-                  }} className="gap-2">
+                  <DropdownMenuItem onClick={() => setIsEditingNotes(true)} className="gap-2">
                     <Pencil className="w-3.5 h-3.5" />
                     Edit Notes
                   </DropdownMenuItem>
