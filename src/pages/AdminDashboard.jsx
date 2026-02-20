@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Users, Clock, Pencil, Send, CheckCircle, Download } from "lucide-react";
 
 export default function AdminDashboard() {
+  const [isExporting, setIsExporting] = useState(false);
+
   const { data: users = [], isLoading: usersLoading } = useQuery({
     queryKey: ["users"],
     queryFn: () => base44.entities.User.list(),
@@ -22,6 +24,21 @@ export default function AdminDashboard() {
   const customizing = agents.filter((a) => a.status === "customizing").length;
   const submitted = agents.filter((a) => a.status === "submitted").length;
   const approved = agents.filter((a) => a.status === "approved").length;
+
+  const handleExportTemplates = async () => {
+    setIsExporting(true);
+    const response = await base44.functions.invoke('exportTemplates');
+    const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'templates_export.json';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+    setIsExporting(false);
+  };
 
   return (
     <div className="p-8 lg:p-10 max-w-7xl">
