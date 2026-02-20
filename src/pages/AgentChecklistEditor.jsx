@@ -177,13 +177,8 @@ export default function AgentChecklistEditor() {
     updateTaskMutation.mutate({ id: taskId, data: { is_deleted: false } });
   };
 
-  const handleUpdateTaskName = (taskId, newName) => {
-    const task = tasks.find(t => t.id === taskId);
-    const isModified = task.source_task && newName !== task.name;
-    updateTaskMutation.mutate({ 
-      id: taskId, 
-      data: { name: newName, is_modified: isModified } 
-    });
+  const handleUpdateTaskNotes = (taskId, notes) => {
+    updateTaskMutation.mutate({ id: taskId, data: { notes } });
   };
 
   const onDragEnd = async (result) => {
@@ -312,7 +307,7 @@ export default function AgentChecklistEditor() {
                     onEditTask={handleEditTask}
                     onDeleteTask={handleDeleteTask}
                     onUndoTask={handleUndoTask}
-                    onUpdateTaskName={handleUpdateTaskName}
+                    onUpdateTaskNotes={handleUpdateTaskNotes}
                     readOnly={readOnly}
                   />
                 ))}

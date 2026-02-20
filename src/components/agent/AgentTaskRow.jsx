@@ -1,25 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { GripVertical, Pencil, Trash2, RotateCcw, ChevronDown, ChevronRight } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { GripVertical, MoreVertical, Pencil, Trash2, RotateCcw, ChevronDown, ChevronRight, Check, X } from "lucide-react";
 import { Draggable } from "@hello-pangea/dnd";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, onUpdateName, readOnly }) {
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [editedName, setEditedName] = useState(task.name);
+export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, onUpdateNotes, readOnly }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
+  const [editedNotes, setEditedNotes] = useState(task.notes || "");
+  const textareaRef = useRef(null);
 
   const isCustom = !task.source_task;
   const isDeleted = task.is_deleted;
   const isModified = task.is_modified;
 
-  const handleSaveName = () => {
-    if (editedName.trim() && editedName !== task.name) {
-      onUpdateName(task.id, editedName);
+  useEffect(() => {
+    if (isEditingNotes && textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
     }
-    setIsEditingName(false);
-  };
+  }, [isEditingNotes, editedNotes]);
 
   return (
     <Draggable draggableId={task.id} index={index} isDragDisabled={readOnly || isDeleted}>
@@ -47,28 +54,9 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              {!readOnly && isEditingName ? (
-                <Input 
-                  value={editedName}
-                  onChange={(e) => setEditedName(e.target.value)}
-                  onBlur={handleSaveName}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleSaveName();
-                    if (e.key === "Escape") { setEditedName(task.name); setIsEditingName(false); }
-                  }}
-                  className="h-7 font-medium text-slate-900 max-w-md"
-                  autoFocus
-                />
-              ) : (
-                <span 
-                  className={`font-medium text-slate-900 ${isDeleted ? "line-through" : ""} ${
-                    !readOnly && !isDeleted ? "cursor-pointer hover:text-blue-600" : ""
-                  }`}
-                  onClick={() => !readOnly && !isDeleted && setIsEditingName(true)}
-                >
-                  {task.name}
-                </span>
-              )}
+              <span className={`font-medium text-slate-900 ${isDeleted ? "line-through" : ""}`}>
+                {task.name}
+              </span>
 
               {isCustom && (
                 <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-xs px-2 py-0">
@@ -87,8 +75,50 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
               )}
             </div>
 
-            {isExpanded && task.notes && (
-              <p className="text-sm text-slate-900 mt-2 whitespace-pre-wrap">{task.notes}</p>
+            {(isExpanded || isEditingNotes) && (
+              <div className="mt-2">
+                {isEditingNotes ? (
+                  <div className="space-y-2">
+                    <Textarea
+                      ref={textareaRef}
+                      value={editedNotes}
+                      onChange={(e) => setEditedNotes(e.target.value)}
+                      className="text-xs resize-none"
+                      rows={1}
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          if (editedNotes !== task.notes) {
+                            onUpdateNotes(task.id, editedNotes);
+                          }
+                          setIsEditingNotes(false);
+                        }}
+                        className="h-6 text-green-600 hover:text-green-700 gap-1 text-xs"
+                      >
+                        <Check className="w-3 h-3" />
+                        Save
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setEditedNotes(task.notes || "");
+                          setIsEditingNotes(false);
+                        }}
+                        className="h-6 text-slate-400 hover:text-slate-600 gap-1 text-xs"
+                      >
+                        <X className="w-3 h-3" />
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-900 whitespace-pre-wrap">{task.notes}</p>
+                )}
+              </div>
             )}
           </div>
 
@@ -97,46 +127,53 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsExpanded(!isExpanded)}
+                onClick={() => {
+                  if (isEditingNotes && editedNotes !== task.notes) {
+                    onUpdateNotes(task.id, editedNotes);
+                  }
+                  setIsEditingNotes(false);
+                  setIsExpanded(!isExpanded);
+                }}
                 className="h-7 w-7 text-slate-400 hover:text-slate-600"
               >
                 {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
               </Button>
             )}
 
-            {!readOnly && (
-              <>
-                {isDeleted ? (
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => onUndo(task.id)}
-                    className="h-7 text-blue-600 hover:text-blue-700 gap-1 text-xs"
-                  >
-                    <RotateCcw className="w-3 h-3" />
-                    Undo
+            {!readOnly && !isDeleted && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-slate-600">
+                    <MoreVertical className="w-4 h-4" />
                   </Button>
-                ) : (
-                  <>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => onEdit(task)}
-                      className="h-7 w-7 text-slate-400 hover:text-slate-600"
-                    >
-                      <Pencil className="w-3.5 h-3.5" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => onDelete(task.id)}
-                      className="h-7 w-7 text-slate-400 hover:text-red-500"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </Button>
-                  </>
-                )}
-              </>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setIsEditingNotes(true)} className="gap-2">
+                    <Pencil className="w-3.5 h-3.5" />
+                    Edit Notes
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onEdit(task)} className="gap-2">
+                    <Pencil className="w-3.5 h-3.5" />
+                    Edit Task
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onDelete(task.id)} className="gap-2 text-red-600">
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {!readOnly && isDeleted && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => onUndo(task.id)}
+                className="h-7 text-blue-600 hover:text-blue-700 gap-1 text-xs"
+              >
+                <RotateCcw className="w-3 h-3" />
+                Undo
+              </Button>
             )}
           </div>
         </div>
