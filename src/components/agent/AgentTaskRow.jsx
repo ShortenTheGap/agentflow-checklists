@@ -75,7 +75,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
               )}
             </div>
 
-            {(isExpanded || isEditingNotes) && (
+            {!isDeleted && (isExpanded || isEditingNotes) && (
               <div className="mt-2">
                 {isEditingNotes ? (
                   <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
                       ref={textareaRef}
                       value={editedNotes}
                       onChange={(e) => setEditedNotes(e.target.value)}
-                      className="text-xs resize-none"
+                      className="text-sm resize-none"
                       rows={1}
                     />
                     <div className="flex gap-2">
@@ -95,6 +95,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
                             onUpdateNotes(task.id, editedNotes);
                           }
                           setIsEditingNotes(false);
+                          setIsExpanded(true);
                         }}
                         className="h-6 text-green-600 hover:text-green-700 gap-1 text-xs"
                       >
@@ -107,6 +108,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
                         onClick={() => {
                           setEditedNotes(task.notes || "");
                           setIsEditingNotes(false);
+                          setIsExpanded(!!task.notes);
                         }}
                         className="h-6 text-slate-400 hover:text-slate-600 gap-1 text-xs"
                       >
@@ -123,7 +125,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
-            {task.notes && (
+            {!isDeleted && task.notes && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -148,7 +150,10 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setIsEditingNotes(true)} className="gap-2">
+                  <DropdownMenuItem onClick={() => {
+                    setIsExpanded(true);
+                    setIsEditingNotes(true);
+                  }} className="gap-2">
                     <Pencil className="w-3.5 h-3.5" />
                     Edit Notes
                   </DropdownMenuItem>
