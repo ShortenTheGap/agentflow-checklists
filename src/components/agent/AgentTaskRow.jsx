@@ -143,7 +143,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
               </Button>
             )}
 
-            {!readOnly && (
+            {!readOnly && !isDeleted && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-slate-600">
@@ -159,19 +159,23 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
                     <Pencil className="w-3.5 h-3.5" />
                     Edit Task
                   </DropdownMenuItem>
-                  {isDeleted ? (
-                    <DropdownMenuItem onClick={() => onUndo(task.id)} className="gap-2 text-blue-600">
-                      <RotateCcw className="w-3.5 h-3.5" />
-                      Undo Delete
-                    </DropdownMenuItem>
-                  ) : (
-                    <DropdownMenuItem onClick={() => onDelete(task.id)} className="gap-2 text-red-600">
-                      <Trash2 className="w-3.5 h-3.5" />
-                      Delete
-                    </DropdownMenuItem>
-                  )}
+                  <DropdownMenuItem onClick={() => onDelete(task.id)} className="gap-2 text-red-600">
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Delete
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            )}
+            {!readOnly && isDeleted && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onUndo(task.id)}
+                className="h-7 w-7 text-blue-600 hover:text-blue-700"
+                title="Undo Delete"
+              >
+                <RotateCcw className="w-4 h-4" />
+              </Button>
             )}
           </div>
         </div>
