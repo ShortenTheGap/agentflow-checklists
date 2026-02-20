@@ -50,14 +50,25 @@ export default function AdminDashboard() {
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Dashboard</h1>
           <p className="text-sm text-slate-400 mt-1">Overview of agent onboarding progress</p>
         </div>
-        <Button 
-          onClick={handleExportTemplates} 
-          disabled={isExporting}
-          className="gap-2"
-        >
-          <Download className="w-4 h-4" />
-          {isExporting ? 'Exporting...' : 'Export Templates'}
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={handleExportUserTypes} 
+            disabled={isExporting}
+            className="gap-2"
+            variant="outline"
+          >
+            <Download className="w-4 h-4" />
+            {isExporting ? 'Exporting...' : 'Export User Types'}
+          </Button>
+          <Button 
+            onClick={handleExportTemplates} 
+            disabled={isExporting}
+            className="gap-2"
+          >
+            <Download className="w-4 h-4" />
+            {isExporting ? 'Exporting...' : 'Export Templates'}
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
