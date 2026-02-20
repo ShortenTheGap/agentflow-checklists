@@ -179,7 +179,7 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
               </Button>
             )}
 
-            {readOnly && <span className="text-xs text-slate-400">View Only</span>}
+
           </div>
         </div>
       )}
