@@ -13,7 +13,7 @@ export default function AgentSectionCard({
   onEditTask, 
   onDeleteTask,
   onUndoTask,
-  onUpdateTaskName,
+  onUpdateTaskNotes,
   readOnly
 }) {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -76,7 +76,7 @@ export default function AgentSectionCard({
                       onEdit={() => onEditTask(task)}
                       onDelete={onDeleteTask}
                       onUndo={onUndoTask}
-                      onUpdateName={onUpdateTaskName}
+                      onUpdateNotes={onUpdateTaskNotes}
                       readOnly={readOnly}
                     />
                   ))}
