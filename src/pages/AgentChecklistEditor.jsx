@@ -359,6 +359,7 @@ export default function AgentChecklistEditor() {
         onOpenChange={setTaskModalOpen}
         task={editingTask}
         onSave={handleSaveTask}
+        readOnly={readOnly}
       />
 
       <SubmitConfirmModal
