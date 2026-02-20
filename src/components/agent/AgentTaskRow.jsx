@@ -151,15 +151,15 @@ export default function AgentTaskRow({ task, index, onEdit, onDelete, onUndo, on
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setIsEditingNotes(true)} className="gap-2">
+                  <DropdownMenuItem onClick={() => setIsEditingNotes(true)} className="gap-2" disabled={readOnly}>
                     <Pencil className="w-3.5 h-3.5" />
                     Edit Notes
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onEdit(task)} className="gap-2">
+                  <DropdownMenuItem onClick={() => onEdit(task)} className="gap-2" disabled={readOnly}>
                     <Pencil className="w-3.5 h-3.5" />
                     Edit Task
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onDelete(task.id)} className="gap-2 text-red-600">
+                  <DropdownMenuItem onClick={() => onDelete(task.id)} className="gap-2 text-red-600" disabled={readOnly}>
                     <Trash2 className="w-3.5 h-3.5" />
                     Delete
                   </DropdownMenuItem>
