@@ -73,7 +73,7 @@ export default function AgentSectionCard({
                       key={task.id}
                       task={task}
                       index={taskIndex}
-                      onEdit={() => onEditTask(task)}
+                      onEdit={onEditTask}
                       onDelete={onDeleteTask}
                       onUndo={onUndoTask}
                       onUpdateNotes={onUpdateTaskNotes}
