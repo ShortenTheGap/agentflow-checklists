@@ -50,7 +50,7 @@ export default function AgentChecklistEditor() {
 
   const { data: template } = useQuery({
     queryKey: ["template", checklist?.source_template],
-    queryFn: () => base44.entities.ChecklistTemplate.filter({ id: checklist.source_template }).then(r => r[0]),
+    queryFn: () => base44.entities.ChecklistTemplate.filter({ id: checklist.source_template }).then(r => r[0] || null),
     enabled: !!checklist?.source_template,
   });
 
