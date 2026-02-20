@@ -10,7 +10,7 @@ export default function Home() {
       try {
         const isAuthenticated = await base44.auth.isAuthenticated();
         if (!isAuthenticated) {
-          base44.auth.redirectToLogin(createPageUrl("Home"));
+          setLoading(false);
           return;
         }
         const user = await base44.auth.me();
@@ -19,8 +19,9 @@ export default function Home() {
         } else {
           window.location.replace(createPageUrl("AgentDashboard"));
         }
-      } catch {
-        base44.auth.redirectToLogin(window.location.href);
+      } catch (err) {
+        console.error("Auth check error:", err);
+        setLoading(false);
       }
     };
     route();
