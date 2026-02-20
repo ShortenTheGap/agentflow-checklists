@@ -245,10 +245,30 @@ export default function AgentChecklistEditor() {
   const activeTasks = tasks.filter(t => !t.is_deleted && sections.some(s => s.id === t.agent_section && !s.is_deleted));
   const totalTasks = tasks.filter(t => sections.some(s => s.id === t.agent_section && !s.is_deleted)).length;
 
-  if (!checklist || !template) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-slate-300 border-t-slate-900 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!checklist) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-slate-600">No checklist found for your account.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!template) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-slate-600">Template not found.</p>
+        </div>
       </div>
     );
   }
