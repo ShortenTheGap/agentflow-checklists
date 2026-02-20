@@ -42,8 +42,13 @@ export default function AgentChecklistEditor() {
   const { data: checklist } = useQuery({
     queryKey: ["agentChecklist", user?.id],
     queryFn: async () => {
-      const lists = await base44.entities.AgentChecklist.filter({ agent: user.id });
-      return lists[0] || null;
+      try {
+        const lists = await base44.entities.AgentChecklist.filter({ agent: user.id });
+        return lists[0] || null;
+      } catch (err) {
+        console.error("Checklist fetch error:", err);
+        return null;
+      }
     },
     enabled: !!user?.id,
   });
