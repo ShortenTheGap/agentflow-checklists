@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
+import { createPageUrl } from "@/utils";
 import StatusBadge from "@/components/StatusBadge";
 import { Clock, Pencil, Send, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
